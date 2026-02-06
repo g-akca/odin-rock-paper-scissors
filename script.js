@@ -1,3 +1,14 @@
+const playerChoiceDiv = document.getElementById("player-choice");
+const computerChoiceDiv = document.getElementById("computer-choice");
+const scoreDiv = document.getElementById("score");
+const winnerEl = document.getElementById("winner");
+
+const rockButton = document.getElementById("rock-button");
+const paperButton = document.getElementById("paper-button");
+const scissorsButton = document.getElementById("scissors-button");
+const restartButton = document.getElementById("restart-button");
+const choices = [rockButton, paperButton, scissorsButton];
+
 function capitalize(word) {
     return word[0].toUpperCase() + word.slice(1);
 }
@@ -7,48 +18,57 @@ function getComputerChoice() {
     return rand == 0 ? "rock" : (rand == 1 ? "paper" : "scissors");
 }
 
-function getHumanChoice() {
-    return prompt("Enter one of the possible moves: 'rock', 'paper', 'scissors'");
-}
+function playRound(playerChoice, computerChoice) {
+    console.log("Your move was: " + capitalize(playerChoice));
+    console.log("Computer move was: " + capitalize(computerChoice));
 
-function playGame() {
-    function playRound(humanChoice, computerChoice) {
-        humanChoice = humanChoice.toLowerCase();
+    playerChoiceDiv.innerText = capitalize(playerChoice);
+    computerChoiceDiv.innerText = capitalize(computerChoice);
 
-        console.log("Your move was: " + capitalize(humanChoice));
-        console.log("Computer move was: " + capitalize(computerChoice));
-
-        if ((humanChoice == "rock" && computerChoice == "scissors") || (humanChoice == "scissors" && computerChoice == "paper") || humanChoice == "paper" && computerChoice == "rock") {
-            console.log(`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}`);
-            humanScore++;
-        }
-        else if (humanChoice == computerChoice) {
-            console.log("It was a tie! No points in this round.");
-        }
-        else {
-            console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}`);
-            computerScore++;
-        }
-
-        console.log(`Player ${humanScore} - ${computerScore} Computer`);
+    if ((playerChoice == "rock" && computerChoice == "scissors") || (playerChoice == "scissors" && computerChoice == "paper") || playerChoice == "paper" && computerChoice == "rock") {
+        console.log(`You win! ${capitalize(playerChoice)} beats ${capitalize(computerChoice)}`);
+        playerScore++;
     }
-
-    let humanScore = 0;
-    let computerScore = 0;
-
-    for (let i = 0; i < 5; i++) {
-        playRound(getHumanChoice(), getComputerChoice());
-    }
-
-    if (humanScore > computerScore) {
-        console.log("You won the game!");
-    }
-    else if (computerScore > humanScore) {
-        console.log("Computer won the game!");
+    else if (playerChoice == computerChoice) {
+        console.log("It was a tie! No points in this round.");
     }
     else {
-        console.log("The game ended with a tie!")
+        console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(playerChoice)}`);
+        computerScore++;
     }
+
+    console.log(`Player ${playerScore} - ${computerScore} Computer`);
+    scoreDiv.innerText = `Player ${playerScore} - ${computerScore} Computer`;
 }
 
-playGame();
+function endGame(winner) {
+    choices.forEach(btn => btn.hidden = true);
+    restartButton.hidden = false;
+
+    console.log(`${winner} won the game!`);
+    winnerEl.innerText = `${winner} won the game!`;
+}
+
+function restartGame() {
+    playerScore = 0;
+    computerScore = 0;
+    scoreDiv.innerText = `Player 0 - 0 Computer`;
+    playerChoiceDiv.innerText = "";
+    computerChoiceDiv.innerText = "";
+    winnerEl.innerText = "";
+
+    choices.forEach(btn => btn.hidden = false);
+    restartButton.hidden = true;
+}
+
+choices.forEach(btn => btn.addEventListener("click", () => {
+    playRound(btn.value, getComputerChoice());
+    
+    if (playerScore == 5) endGame("Player");
+    else if (computerScore == 5) endGame("Computer");
+}));
+
+restartButton.addEventListener("click", restartGame);
+
+let playerScore = 0;
+let computerScore = 0;
