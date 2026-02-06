@@ -28,17 +28,19 @@ function playRound(playerChoice, computerChoice) {
     if ((playerChoice == "rock" && computerChoice == "scissors") || (playerChoice == "scissors" && computerChoice == "paper") || playerChoice == "paper" && computerChoice == "rock") {
         console.log(`You win! ${capitalize(playerChoice)} beats ${capitalize(computerChoice)}`);
         playerScore++;
+        scoreDiv.innerHTML = `Player <span style="color: #59A682;">${playerScore}</span> - ${computerScore} Computer`;
     }
     else if (playerChoice == computerChoice) {
         console.log("It was a tie! No points in this round.");
+        scoreDiv.innerHTML = `Player ${playerScore} - ${computerScore} Computer`;
     }
     else {
         console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(playerChoice)}`);
         computerScore++;
+        scoreDiv.innerHTML = `Player ${playerScore} - <span style="color: #A65959;">${computerScore}</span> Computer`;
     }
 
     console.log(`Player ${playerScore} - ${computerScore} Computer`);
-    scoreDiv.innerText = `Player ${playerScore} - ${computerScore} Computer`;
 }
 
 function endGame(winner) {
@@ -46,7 +48,9 @@ function endGame(winner) {
     restartButton.hidden = false;
 
     console.log(`${winner} won the game!`);
-    winnerEl.innerText = `${winner} won the game!`;
+
+    if (winner == "Player") winnerEl.innerHTML = `<span style="color: #59A682;">${winner}</span> won the game!`;
+    else winnerEl.innerHTML = `<span style="color: #A65959;">${winner}</span> won the game!`;
 }
 
 function restartGame() {
